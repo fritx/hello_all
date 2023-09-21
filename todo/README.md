@@ -1,10 +1,12 @@
-## Go get
+## Install from GitHub
 
 ```sh
-todo...
+go install github.com/fritx/hello_all/todo@latest
+# or
+go get github.com/fritx/hello_all/todo
 ```
 
-## Build from source
+## Build from Source
 
 CLI:
 <https://cobra.dev/>
