@@ -11,7 +11,7 @@ var rootCmd = &cobra.Command{
 	Use:   "todo",
 	Short: "Hugo is a very fast static site generator",
 	Long: `A Fast and easy todo-list CLI and admin UI in Go.
-		Complete documentation is available at https://github.com/fritx/todo-hub`,
+		Complete documentation is available at https://github.com/fritx/hello_all/todo-hub`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// alias to `todo add`
 		// AddCmd.Execute() // fatal error: stack overflow
