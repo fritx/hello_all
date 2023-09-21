@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"todo-hub/db"
+
+	"github.com/fritx/hello_all/todo/db"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"

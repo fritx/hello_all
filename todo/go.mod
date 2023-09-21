@@ -1,4 +1,4 @@
-module todo-hub
+module github.com/fritx/hello_all/todo
 
 go 1.21.1
 

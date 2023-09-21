@@ -1,25 +1,14 @@
-## Usage
+## Go get
 
 ```sh
-go install github.com/fritx/todo-hub
-alias todo=~/go/bin/todo-hub
-
-todo
-# >> ? What is the title? 
-# ...
-
-todo list
-# >> Prisma schema loaded from schema.prisma
-# Prisma Studio is up on http://localhost:5555
+todo...
 ```
 
-## Development
+## Build from source
 
 CLI:
 <https://cobra.dev/>
 <https://github.com/go-survey/survey>
-
----
 
 Prisma:
 <https://goprisma.org/docs/getting-started/quickstart>
@@ -39,14 +28,14 @@ go run .
 
 go build
 go install .
-alias todo=~/go/bin/todo-hub
+
 todo
 # >> ? What is the title? 
 # ...
 
-# launch db admin
-pnpm i -g prisma
-prisma studio
+todo list
+# >> Prisma schema loaded from schema.prisma
+# Prisma Studio is up on http://localhost:5555
 
 # schema change & db migrate
 go run github.com/steebchen/prisma-client-go migrate dev --name add_comment_model

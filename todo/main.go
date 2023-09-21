@@ -1,7 +1,7 @@
 package main
 
 import (
-	"todo-hub/cmd"
+	"github.com/fritx/hello_all/todo/cmd"
 )
 
 func main() {
