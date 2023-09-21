@@ -2,7 +2,15 @@
 
 ```sh
 go install github.com/fritx/todo-hub
+alias todo=~/go/bin/todo-hub
+
+todo
+# >> ? What is the title? 
 # ...
+
+todo list
+# >> Prisma schema loaded from schema.prisma
+# Prisma Studio is up on http://localhost:5555
 ```
 
 ## Development
@@ -30,7 +38,11 @@ go get prisma-go/db
 go run .
 
 go build
-./todo-hub
+go install .
+alias todo=~/go/bin/todo-hub
+todo
+# >> ? What is the title? 
+# ...
 
 # launch db admin
 pnpm i -g prisma
