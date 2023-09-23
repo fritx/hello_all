@@ -45,6 +45,11 @@ func UpdateStatus(client *db.PrismaClient, Id string, status string) (updated *d
 	}
 	if status == StatusDone {
 		setParams = append(setParams, db.Todo.LastDoneAt.Set(time.Now()))
+	} else if status == StatusWip {
+		_, ok := found.FirstWipAt()
+		if !ok {
+			setParams = append(setParams, db.Todo.FirstWipAt.Set(time.Now()))
+		}
 	}
 	ud, err := client.Todo.FindUnique(
 		db.Todo.ID.Equals(Id),
