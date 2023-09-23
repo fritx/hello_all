@@ -4,11 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"todo-hub/db"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -24,22 +22,22 @@ var AddCmd = &cobra.Command{
 	},
 }
 
-// the questions to ask
-var qs = []*survey.Question{
-	{
-		Name:     "title",
-		Prompt:   &survey.Input{Message: "* Title:"},
-		Validate: survey.Required,
-		// Transform: survey.Title,
-	},
-	{
-		Name:   "desc",
-		Prompt: &survey.Input{Message: "Description:"},
-	},
-}
-
 func TodoAdd() {
 	fmt.Println("Adding a todo...")
+
+	// the questions to ask
+	var qs = []*survey.Question{
+		{
+			Name:     "title",
+			Prompt:   &survey.Input{Message: "* Title:"},
+			Validate: survey.Required,
+			// Transform: survey.Title,
+		},
+		{
+			Name:   "desc",
+			Prompt: &survey.Input{Message: "Description:"},
+		},
+	}
 	// the answers will be written to this struct
 	answers := struct {
 		Title string // survey will match the question and field names
@@ -47,23 +45,12 @@ func TodoAdd() {
 	}{}
 	// perform the questions
 	if err := survey.Ask(qs, &answers); err != nil {
-		if err == terminal.InterruptErr {
-			fmt.Println("Canceled.")
-			return // skip
-		}
 		panic(err)
 	}
 
 	// connect to db
-	client := db.NewClient()
-	if err := client.Prisma.Connect(); err != nil {
-		panic(err)
-	}
-	defer func() {
-		if err := client.Prisma.Disconnect(); err != nil {
-			log.Fatal(err) // log without stack
-		}
-	}()
+	client, disconnect := db.GetClient()
+	defer disconnect()
 
 	// insert a record
 	ctx := context.Background()

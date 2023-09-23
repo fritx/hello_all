@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 
@@ -23,7 +22,7 @@ var listCmd = &cobra.Command{
 
 		if err := c.Run(); err != nil {
 			fmt.Println("Run `npm i -g prisma` first.")
-			log.Fatal(err)
+			panic(err)
 		}
 	},
 }

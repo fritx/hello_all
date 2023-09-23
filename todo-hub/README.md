@@ -1,3 +1,4 @@
+- [ ] enums & db views
 - [ ] install from github
 - [ ] cmd name => todo
 - [ ] status todo(o), wip(w), done(x)

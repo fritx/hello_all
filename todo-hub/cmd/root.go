@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
-	"os"
 
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -20,8 +21,19 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	defer func() {
+		if r := recover(); r != nil {
+			if r == terminal.InterruptErr {
+				fmt.Println("Canceled.")
+				return
+			}
+			// panic(r)
+			log.Fatal(r) // log without stack
+		}
+	}()
+
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+		// panic(err)
+		log.Fatal(err) // log without stack
 	}
 }
