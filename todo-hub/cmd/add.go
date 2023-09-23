@@ -15,14 +15,15 @@ func init() {
 }
 
 var AddCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Add a todo",
+	Use:     "add",
+	Aliases: []string{"new", "create"},
+	Short:   "Add a todo",
 	Run: func(cmd *cobra.Command, args []string) {
-		TodoAdd()
+		add()
 	},
 }
 
-func TodoAdd() {
+func add() {
 	fmt.Println("Adding a todo...")
 
 	// the questions to ask

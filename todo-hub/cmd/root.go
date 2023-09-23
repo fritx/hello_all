@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// alias to `todo add`
 		// AddCmd.Execute() // fatal error: stack overflow
-		TodoAdd()
+		add()
 	},
 }
 
