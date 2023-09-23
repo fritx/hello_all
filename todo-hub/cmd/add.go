@@ -8,6 +8,7 @@ import (
 	"todo-hub/db"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/terminal"
 	"github.com/spf13/cobra"
 )
 
@@ -27,17 +28,18 @@ var AddCmd = &cobra.Command{
 var qs = []*survey.Question{
 	{
 		Name:     "title",
-		Prompt:   &survey.Input{Message: "What is the title?"},
+		Prompt:   &survey.Input{Message: "* Title:"},
 		Validate: survey.Required,
 		// Transform: survey.Title,
 	},
 	{
 		Name:   "desc",
-		Prompt: &survey.Input{Message: "What is the description?"},
+		Prompt: &survey.Input{Message: "Description:"},
 	},
 }
 
 func TodoAdd() {
+	fmt.Println("Adding a todo...")
 	// the answers will be written to this struct
 	answers := struct {
 		Title string // survey will match the question and field names
@@ -45,9 +47,11 @@ func TodoAdd() {
 	}{}
 	// perform the questions
 	if err := survey.Ask(qs, &answers); err != nil {
-		// panic(err)
-		log.Fatal(err) // log without stack
-		return
+		if err == terminal.InterruptErr {
+			fmt.Println("Canceled.")
+			return // skip
+		}
+		panic(err)
 	}
 
 	// connect to db
@@ -58,7 +62,6 @@ func TodoAdd() {
 	defer func() {
 		if err := client.Prisma.Disconnect(); err != nil {
 			log.Fatal(err) // log without stack
-			return
 		}
 	}()
 
@@ -77,5 +80,5 @@ func TodoAdd() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("added: %s\n", result)
+	fmt.Printf("Todo added: %s\n", result)
 }
