@@ -6,22 +6,35 @@ import (
 	"todo-hub/db"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2/terminal"
 )
 
-func StatusPromptLoop(status string) {
+func StatusPromptLoop(status string) error {
 	fmt.Printf("Loop: Marking a todo as '%s'...\n", StatusTitle[status])
 	fmt.Println("Press CTRL-C to exit.")
 
 	// connect to db
-	client, disconnect := db.GetClient()
+	client, disconnect, err := db.GetClient()
+	if err != nil {
+		return err
+	}
 	defer disconnect()
 
 	for {
-		statusPromptEach(client, status)
+		// infinite loop without error handling
+		err := statusPromptEach(client, status)
+
+		if err == terminal.InterruptErr {
+			return err // quit loop
+		}
+		if err == ErrSkipRound {
+			continue // skip round
+		}
+		continue
 	}
 }
 
-func statusPromptEach(client *db.PrismaClient, status string) {
+func statusPromptEach(client *db.PrismaClient, status string) error {
 	// the questions to ask
 	var qs = []*survey.Question{
 		{
@@ -37,18 +50,19 @@ func statusPromptEach(client *db.PrismaClient, status string) {
 
 	// perform the questions
 	if err := survey.Ask(qs, &answers); err != nil {
-		panic(err)
+		return err
 	}
 	// update status
-	updated := UpdateStatus(client, answers.Id, status)
-	if updated == nil {
-		return // skip
+	updated, err := UpdateStatus(client, answers.Id, status)
+	if err != nil {
+		return err
 	}
 
 	// output the json
 	result, err := json.MarshalIndent(updated, "", "  ")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Printf("Todo marked as '%s': %s\n", StatusTitle[status], result)
+	return nil
 }

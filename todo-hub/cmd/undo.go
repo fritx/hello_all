@@ -15,7 +15,7 @@ var undoCmd = &cobra.Command{
 	Use:     "undo",
 	Short:   fmt.Sprintf("Mark a todo as '%s'", lib.StatusTitle[lib.StatusTodo]),
 	Aliases: []string{"o", "todo", "uncheck"},
-	Run: func(cmd *cobra.Command, args []string) {
-		lib.StatusPromptLoop(lib.StatusTodo)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return lib.StatusPromptLoop(lib.StatusTodo)
 	},
 }

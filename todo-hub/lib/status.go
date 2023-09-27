@@ -23,21 +23,21 @@ func init() {
 	StatusTitle[StatusDone] = "done"
 }
 
-func UpdateStatus(client *db.PrismaClient, Id string, status string) (updated *db.TodoModel) {
+var ErrSkipRound = errors.New("Skip round.")
 
+func UpdateStatus(client *db.PrismaClient, Id string, status string) (*db.TodoModel, error) {
 	ctx := context.Background()
-
 	found, err := client.Todo.FindUnique(
 		db.Todo.ID.Equals(Id),
 	).Exec(ctx)
 	if errors.Is(err, db.ErrNotFound) {
 		fmt.Printf("Todo '%s' not found.\n", Id)
-		return
+		return nil, ErrSkipRound
 	} else if err != nil {
-		panic(err)
+		return nil, err
 	} else if found.Status == status {
 		fmt.Printf("Todo '%s' has been %s before.\n", Id, status)
-		return
+		return nil, ErrSkipRound
 	}
 
 	setParams := []db.TodoSetParam{
@@ -57,8 +57,7 @@ func UpdateStatus(client *db.PrismaClient, Id string, status string) (updated *d
 		setParams...,
 	).Exec(ctx)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	updated = ud
-	return
+	return ud, nil
 }

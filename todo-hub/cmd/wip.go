@@ -15,7 +15,7 @@ var wipCmd = &cobra.Command{
 	Use:     "wip",
 	Short:   fmt.Sprintf("Mark a todo as '%s'", lib.StatusTitle[lib.StatusWip]),
 	Aliases: []string{"w", "doing"},
-	Run: func(cmd *cobra.Command, args []string) {
-		lib.StatusPromptLoop(lib.StatusWip)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return lib.StatusPromptLoop(lib.StatusWip)
 	},
 }

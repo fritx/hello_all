@@ -1,12 +1,13 @@
 package db
 
-func GetClient() (client *PrismaClient, disconnect func()) {
+func GetClient() (client *PrismaClient, disconnect func(), err error) {
 	client = NewClient()
-	if err := client.Prisma.Connect(); err != nil {
-		panic(err)
+	if err = client.Prisma.Connect(); err != nil {
+		return
 	}
 	disconnect = func() {
-		if err := client.Prisma.Disconnect(); err != nil {
+		err := client.Prisma.Disconnect()
+		if err != nil {
 			panic(err)
 		}
 	}

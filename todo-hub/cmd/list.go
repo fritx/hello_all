@@ -15,14 +15,15 @@ func init() {
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Launch the db admin",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		c := exec.Command("prisma", "studio")
 		c.Stdout = os.Stdout
 		c.Stderr = os.Stderr
 
 		if err := c.Run(); err != nil {
 			fmt.Println("Run `npm i -g prisma` first.")
-			panic(err)
+			return err
 		}
+		return nil
 	},
 }

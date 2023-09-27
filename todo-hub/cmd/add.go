@@ -18,12 +18,12 @@ var AddCmd = &cobra.Command{
 	Use:     "add",
 	Aliases: []string{"new", "create"},
 	Short:   "Add a todo",
-	Run: func(cmd *cobra.Command, args []string) {
-		add()
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return add()
 	},
 }
 
-func add() {
+func add() error {
 	fmt.Println("Adding a todo...")
 
 	// the questions to ask
@@ -46,11 +46,14 @@ func add() {
 	}{}
 	// perform the questions
 	if err := survey.Ask(qs, &answers); err != nil {
-		panic(err)
+		return err
 	}
 
 	// connect to db
-	client, disconnect := db.GetClient()
+	client, disconnect, err := db.GetClient()
+	if err != nil {
+		return err
+	}
 	defer disconnect()
 
 	// insert a record
@@ -60,13 +63,14 @@ func add() {
 		db.Todo.Desc.Set(answers.Desc),
 	).Exec(ctx)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// output the json
 	result, err := json.MarshalIndent(created, "", "  ")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Printf("Todo added: %s\n", result)
+	return nil
 }
